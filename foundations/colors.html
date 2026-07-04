@@ -1,0 +1,45 @@
+<!-- @dsCard group="Colors" name="Workshop palette" subtitle="Light + dark themes, usage rules" width="800" height="560" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',-apple-system,sans-serif; padding:1.5rem; background:#FFF9EE; color:#26221B; }
+  h2 { font-family:'Sora',sans-serif; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; margin:0 0 0.75rem; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:0.6rem; margin-bottom:1.5rem; }
+  .sw { border:3px solid #26221B; border-radius:10px; overflow:hidden; }
+  .chip { height:56px; }
+  .meta { padding:0.4rem 0.55rem; background:#fff; font-size:0.68rem; line-height:1.35; }
+  .meta b { display:block; font-size:0.72rem; }
+  .dark-wrap { background:#201C15; color:#F5EFE2; border-radius:12px; padding:1rem 1rem 0.4rem; }
+  .dark-wrap h2 { color:#F5EFE2; }
+  .dark-wrap .meta { background:#2A251C; color:#F5EFE2; }
+  .rules { font-size:0.75rem; color:#5C5648; line-height:1.5; }
+  .rules b { color:#26221B; }
+</style>
+</head>
+<body>
+  <h2>Light (default)</h2>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#FFF9EE"></div><div class="meta"><b>--cream</b>#FFF9EE · page bg</div></div>
+    <div class="sw"><div class="chip" style="background:#26221B"></div><div class="meta"><b>--ink</b>#26221B · text, borders</div></div>
+    <div class="sw"><div class="chip" style="background:#FFD84D"></div><div class="meta"><b>--yellow</b>#FFD84D · accents, CTAs</div></div>
+    <div class="sw"><div class="chip" style="background:#E2543A"></div><div class="meta"><b>--marker</b>#E2543A · annotations only</div></div>
+    <div class="sw"><div class="chip" style="background:#5C5648"></div><div class="meta"><b>--muted</b>#5C5648 · secondary text</div></div>
+    <div class="sw"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><b>--card</b>#FFFFFF · card faces</div></div>
+  </div>
+  <div class="dark-wrap">
+    <h2>Dark (warm brown, never gray)</h2>
+    <div class="row">
+      <div class="sw"><div class="chip" style="background:#201C15"></div><div class="meta"><b>--cream</b>#201C15</div></div>
+      <div class="sw"><div class="chip" style="background:#F5EFE2"></div><div class="meta"><b>--ink</b>#F5EFE2</div></div>
+      <div class="sw"><div class="chip" style="background:#FFD84D"></div><div class="meta"><b>--yellow</b>#FFD84D</div></div>
+      <div class="sw"><div class="chip" style="background:#FF7A5C"></div><div class="meta"><b>--marker</b>#FF7A5C</div></div>
+      <div class="sw"><div class="chip" style="background:#2A251C"></div><div class="meta"><b>--card</b>#2A251C</div></div>
+    </div>
+  </div>
+  <p class="rules" style="margin-top:1rem"><b>Rules:</b> marker is exclusively for handwritten annotations and squiggles — never body text or buttons. Yellow never carries text without ink on top. No gradients anywhere. Check AA contrast in both themes.</p>
+</body>
+</html>

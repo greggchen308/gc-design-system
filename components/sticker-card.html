@@ -1,0 +1,40 @@
+<!-- @dsCard group="Components" name="Sticker cards" subtitle="Tilted (default) / straight (Training, 70% playfulness)" width="800" height="520" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700&family=DM+Sans:wght@400;700&family=Gochi+Hand&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',-apple-system,sans-serif; padding:2rem; background:#FFF9EE; color:#26221B; }
+  .row { display:flex; gap:2.5rem; flex-wrap:wrap; }
+  .sticker {
+    width:280px; background:#fff; border:3px solid #26221B; border-radius:14px;
+    padding:0.8rem 0.8rem 1.1rem; box-shadow:8px 8px 0 rgba(38,34,27,0.16);
+    transition:transform 0.22s ease, box-shadow 0.22s ease;
+  }
+  .sticker.tilt { transform:rotate(-2.4deg); }
+  .sticker:hover { transform:rotate(0) translateY(-6px); box-shadow:12px 14px 0 #FFD84D; }
+  .shot { aspect-ratio:16/10; border:2px solid #26221B; border-radius:8px;
+    background:repeating-linear-gradient(45deg,#F4EDDE,#F4EDDE 12px,#EFE6D2 12px,#EFE6D2 24px);
+    display:flex; align-items:center; justify-content:center; font-size:0.7rem; letter-spacing:0.12em; color:#5C5648; text-transform:uppercase; }
+  h3 { font-family:'Sora',sans-serif; font-size:1rem; margin-top:0.8rem; }
+  .anno { font-family:'Gochi Hand',cursive; font-size:1.05rem; color:#E2543A; margin-top:0.25rem; }
+  .note { margin-top:1.6rem; font-size:0.78rem; color:#5C5648; line-height:1.55; max-width:60ch; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="sticker tilt">
+      <div class="shot">screenshot</div>
+      <h3>AI Supply Chain Explorer</h3>
+      <div class="anno">← shipped in a weekend!</div>
+    </div>
+    <div class="sticker">
+      <div class="shot">screenshot</div>
+      <h3>Level 1 — AI Fundamentals</h3>
+    </div>
+  </div>
+  <p class="note">Default: rotation −2.5° to +2° (varied per card), white face, 3px ink border, radius 14, hard shadow 8×8. Hover: straighten, lift −6px, shadow turns yellow 12×14. Training page: rotation 0 (straight) — warmth stays, silliness dials down. Inner images: 2px ink border, radius 8.</p>
+</body>
+</html>
