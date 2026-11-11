@@ -1,21 +1,32 @@
-<!-- @dsCard group="Components" name="Buttons" subtitle="Primary (yellow fill) / secondary (outline), hover lift" width="800" height="300" -->
+<!-- @dsCard group="Components" name="Buttons" subtitle="Primary (yellow fill) / secondary (outline), hover lift, press stamp" width="800" height="300" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --dur-quick: 150ms;
+    --dur-base: 240ms;
+    --ease-settle: cubic-bezier(.34,1.3,.64,1);
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'DM Sans',-apple-system,sans-serif; padding:2rem; background:#FFF9EE; color:#26221B; }
   .row { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }
   .btn {
     display:inline-block; font-weight:700; font-size:0.95rem; text-decoration:none; color:#26221B;
     border:3px solid #26221B; border-radius:999px; padding:0.7rem 1.6rem;
-    transition:transform 0.15s ease, box-shadow 0.15s ease; cursor:pointer; background:transparent;
+    transition:transform var(--dur-base) var(--ease-settle), box-shadow var(--dur-base) var(--ease-settle);
+    cursor:pointer; background:transparent;
   }
   .btn.primary { background:#FFD84D; }
   .btn:hover { transform:translateY(-2px); box-shadow:4px 5px 0 rgba(38,34,27,0.16); }
-  .note { margin-top:1.4rem; font-size:0.78rem; color:#5C5648; line-height:1.55; max-width:52ch; }
+  /* Press = a stamp: the button drops into its own shadow, fast, no overshoot */
+  .btn:active { transform:translate(2px,3px); box-shadow:0 0 0 rgba(38,34,27,0); transition-duration:var(--dur-quick); transition-timing-function:ease-out; }
+  .note { margin-top:1.4rem; font-size:0.78rem; color:#5C5648; line-height:1.55; max-width:56ch; }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .btn:active { transition-duration:1ms; }
+  }
 </style>
 </head>
 <body>
@@ -23,6 +34,6 @@
     <a class="btn primary" href="#">See what I build</a>
     <a class="btn" href="#">Work with me</a>
   </div>
-  <p class="note">Primary = yellow fill + ink text. Secondary = transparent + ink text. Border always 3px ink, radius 999px. Hover: −2px lift + hard shadow. No gradients, ever. Yellow never carries text without ink.</p>
+  <p class="note">Primary = yellow fill + ink text. Secondary = transparent + ink text. Border always 3px ink, radius 999px. Hover: −2px lift + hard shadow, settling in (<code>--dur-base</code>, <code>--ease-settle</code>). Press: drops 2×3px into its own shadow, which collapses — a stamp (<code>--dur-quick</code>). No gradients, ever. Yellow never carries text without ink.</p>
 </body>
 </html>
