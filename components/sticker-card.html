@@ -5,36 +5,88 @@
 <meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700&family=DM+Sans:wght@400;700&family=Gochi+Hand&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --dur-base: 240ms;
+    --dur-settle: 600ms;
+    --dur-drift: 10s;
+    --ease-settle: cubic-bezier(.34,1.3,.64,1);
+    --ease-drift: cubic-bezier(.45,0,.55,1);
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'DM Sans',-apple-system,sans-serif; padding:2rem; background:#FFF9EE; color:#26221B; }
   .row { display:flex; gap:2.5rem; flex-wrap:wrap; }
+  /* .slot carries placement + ambient drift; .sticker carries its tilt + hover */
+  .slot { width:280px; }
   .sticker {
-    width:280px; background:#fff; border:3px solid #26221B; border-radius:14px;
+    background:#fff; border:3px solid #26221B; border-radius:14px;
     padding:0.8rem 0.8rem 1.1rem; box-shadow:8px 8px 0 rgba(38,34,27,0.16);
-    transition:transform 0.22s ease, box-shadow 0.22s ease;
+    transform:rotate(var(--r,0deg));
+    transition:transform var(--dur-base) var(--ease-settle), box-shadow var(--dur-base) var(--ease-settle);
   }
-  .sticker.tilt { transform:rotate(-2.4deg); }
   .sticker:hover { transform:rotate(0) translateY(-6px); box-shadow:12px 14px 0 #FFD84D; }
   .shot { aspect-ratio:16/10; border:2px solid #26221B; border-radius:8px;
     background:repeating-linear-gradient(45deg,#F4EDDE,#F4EDDE 12px,#EFE6D2 12px,#EFE6D2 24px);
     display:flex; align-items:center; justify-content:center; font-size:0.7rem; letter-spacing:0.12em; color:#5C5648; text-transform:uppercase; }
   h3 { font-family:'Sora',sans-serif; font-size:1rem; margin-top:0.8rem; }
   .anno { font-family:'Gochi Hand',cursive; font-size:1.05rem; color:#E2543A; margin-top:0.25rem; }
-  .note { margin-top:1.6rem; font-size:0.78rem; color:#5C5648; line-height:1.55; max-width:60ch; }
+  .note { margin-top:1.6rem; font-size:0.78rem; color:#5C5648; line-height:1.55; max-width:62ch; }
+  .replay { position:fixed; right:1rem; bottom:0.8rem; font:700 0.7rem 'DM Sans',sans-serif; color:#5C5648; background:none; border:0; cursor:pointer; }
+  .replay:hover { color:#26221B; }
+
+  /* Motion — placed like a sticker, then breathes (tilted only) */
+  .play .slot { animation:place var(--d-settle,var(--dur-settle)) var(--ease-settle) var(--delay,200ms) both; }
+  .play .slot.tilt {
+    animation:place var(--d-settle,var(--dur-settle)) var(--ease-settle) var(--delay,200ms) both,
+              drift var(--d-drift,var(--dur-drift)) var(--ease-drift) calc(var(--delay,200ms) + var(--d-settle,var(--dur-settle))) infinite;
+  }
+  .slot:hover { animation-play-state:paused; }
+  @keyframes place {
+    from { opacity:0; transform:translateY(-18px) rotate(-5deg) scale(1.03); }
+    40%  { opacity:1; }
+    to   { opacity:1; transform:none; }
+  }
+  @keyframes drift { /* starts and ends at rest so it hands off from place without a jump */
+    0%, 100% { transform:none; }
+    25% { transform:rotate(0.3deg) translateY(-1.5px); }
+    75% { transform:rotate(-0.3deg); }
+  }
+  .play .straight .sticker { --r:0deg; }
+  @keyframes place-straight { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:none; } }
+  .play .slot.straight { animation-name:place-straight; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation:none !important; transition-duration:1ms !important; }
+  }
 </style>
 </head>
-<body>
+<body class="play">
   <div class="row">
-    <div class="sticker tilt">
-      <div class="shot">screenshot</div>
-      <h3>AI Supply Chain Explorer</h3>
-      <div class="anno">← shipped in a weekend!</div>
+    <div class="slot tilt" data-jitter>
+      <div class="sticker">
+        <div class="shot">screenshot</div>
+        <h3>AI Supply Chain Explorer</h3>
+        <div class="anno">← shipped in a weekend!</div>
+      </div>
     </div>
-    <div class="sticker">
-      <div class="shot">screenshot</div>
-      <h3>Level 1 — AI Fundamentals</h3>
+    <div class="slot straight" data-jitter>
+      <div class="sticker">
+        <div class="shot">screenshot</div>
+        <h3>Level 1 — AI Fundamentals</h3>
+      </div>
     </div>
   </div>
-  <p class="note">Default: rotation −2.5° to +2° (varied per card), white face, 3px ink border, radius 14, hard shadow 8×8. Hover: straighten, lift −6px, shadow turns yellow 12×14. Training page: rotation 0 (straight) — warmth stays, silliness dials down. Inner images: 2px ink border, radius 8.</p>
+  <p class="note">Default: rotation −2.5° to +2° (varied per card), white face, 3px ink border, radius 14, hard shadow 8×8. Hover: straighten, lift −6px, shadow turns yellow 12×14. Training page: rotation 0 (straight) — warmth stays, silliness dials down. Inner images: 2px ink border, radius 8.<br><b>Motion:</b> each card is placed — drops in, one small overshoot, rests (<code>--ease-settle</code>). Tilted cards then breathe ±0.3° over 8–12s; straight cards stay still. Rotation, delay, settle and drift durations are seeded per card, so no two siblings match and no stagger is even. Reduced motion: cards appear in place, no drift.</p>
+  <button class="replay" type="button" onclick="document.body.classList.remove('play');void document.body.offsetWidth;document.body.classList.add('play')">↻ replay</button>
+<script>
+  // Seeded jitter — stable per card, varied between siblings (see foundations/motion.html)
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  document.querySelectorAll('[data-jitter]').forEach((el,i)=>{
+    const rnd=mulberry32(i*7919+17), lerp=(a,b)=>a+(b-a)*rnd();
+    let r=lerp(-2.5,2); if (Math.abs(r)<1) r = r<0 ? r-1 : r+1; // keep tilts visible
+    if (el.classList.contains('tilt')) el.querySelector('.sticker').style.setProperty('--r', r.toFixed(2)+'deg');
+    el.style.setProperty('--delay', Math.round(200+i*170+lerp(-80,80))+'ms');
+    el.style.setProperty('--d-settle', Math.round(lerp(540,680))+'ms');
+    el.style.setProperty('--d-drift', lerp(8,12).toFixed(1)+'s');
+  });
+</script>
 </body>
 </html>

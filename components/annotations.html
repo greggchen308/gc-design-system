@@ -3,20 +3,45 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=DM+Sans:wght@400&family=Gochi+Hand&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=DM+Sans:wght@400;700&family=Gochi+Hand&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --dur-pen: 1100ms;
+    --ease-pen: cubic-bezier(.65,.05,.36,1);
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'DM Sans',-apple-system,sans-serif; padding:2.5rem 2rem; background:#FFF9EE; color:#26221B; text-align:center; }
   h1 { font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-0.03em; font-size:2.4rem; line-height:1.1; }
   .squiggle { position:relative; white-space:nowrap; }
-  .squiggle svg { position:absolute; left:0; bottom:-0.28em; width:100%; height:0.3em; }
-  .anno { font-family:'Gochi Hand',cursive; font-size:1.3rem; color:#E2543A; display:inline-block; transform:rotate(-2.5deg); margin-top:1.8rem; }
+  .squiggle svg { position:absolute; left:0; bottom:-0.28em; width:100%; height:0.3em; overflow:visible; }
+  .squiggle path { stroke-dasharray:1 1; stroke-dashoffset:0; }
+  .anno { font-family:'Gochi Hand',cursive; font-size:1.3rem; color:#E2543A; display:inline-block; transform:rotate(-2.5deg); margin-top:1.8rem; clip-path:inset(-0.2em -0.2em -0.2em -0.2em); }
   .note { margin-top:2rem; font-size:0.78rem; color:#5C5648; line-height:1.55; max-width:56ch; margin-left:auto; margin-right:auto; text-align:left; }
+  .replay { position:fixed; right:1rem; bottom:0.8rem; font:700 0.7rem 'DM Sans',sans-serif; color:#5C5648; background:none; border:0; cursor:pointer; }
+  .replay:hover { color:#26221B; }
+
+  /* Motion — the page's hero moment: squiggle draws once, then the note is written in */
+  .play .squiggle path { animation:draw var(--dur-pen) linear 450ms both; }
+  @keyframes draw { /* uneven hand speed: hesitant start, fast middle, careful end */
+    0%   { stroke-dashoffset:1;   animation-timing-function:cubic-bezier(.5,0,.9,.6); }
+    22%  { stroke-dashoffset:.84; animation-timing-function:linear; }
+    70%  { stroke-dashoffset:.18; animation-timing-function:cubic-bezier(.2,.6,.4,1); }
+    100% { stroke-dashoffset:0; }
+  }
+  .play .anno { animation:write var(--dur-pen) var(--ease-pen) 1650ms both; }
+  @keyframes write {
+    from { clip-path:inset(-0.2em 100% -0.2em -0.2em); }
+    to   { clip-path:inset(-0.2em -0.2em -0.2em -0.2em); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation:none !important; }
+  }
 </style>
 </head>
-<body>
-  <h1>Learn. Build. <span class="squiggle">Make it happen.<svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8 Q 25 2, 50 7 T 100 7 T 150 7 T 198 6" fill="none" stroke="#E2543A" stroke-width="4" stroke-linecap="round"/></svg></span></h1>
+<body class="play">
+  <h1>Learn. Build. <span class="squiggle">Make it happen.<svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8 Q 25 2, 50 7 T 100 7 T 150 7 T 198 6" fill="none" stroke="#E2543A" stroke-width="4" stroke-linecap="round" pathLength="1"/></svg></span></h1>
   <span class="anno">↓ every artifact below was vibe-coded — just curiosity and a good brief</span>
-  <p class="note">Squiggle: inline SVG, marker stroke, under the last phrase of a key headline — max one per page. Annotations: Gochi Hand, marker color, ±2–3° rotation, max 1–2 per screen. They must read as a human's margin notes, not a theme. Marker color is reserved exclusively for these elements.</p>
+  <p class="note">Squiggle: inline SVG, marker stroke, under the last phrase of a key headline — max one per page. Annotations: Gochi Hand, marker color, ±2–3° rotation, max 1–2 per screen. They must read as a human's margin notes, not a theme. Marker color is reserved exclusively for these elements.<br><b>Motion:</b> the squiggle is the page's one hero moment — drawn once at hand speed (<code>--dur-pen</code>, uneven), never looped. The note is written in left to right after it finishes. Reduced motion: both appear already drawn.</p>
+  <button class="replay" type="button" onclick="document.body.classList.remove('play');void document.body.offsetWidth;document.body.classList.add('play')">↻ replay</button>
 </body>
 </html>
